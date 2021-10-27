@@ -1,6 +1,8 @@
-import { useState, useContext } from "react";
-import { Stack, Form, FloatingLabel, Row, Col } from "react-bootstrap";
-import { Formik } from "formik";
+import { useState, useContext, useEffect } from "react";
+import * as Yup from "yup";
+
+// bootstrap
+import { Stack, Form, Row, Col, Container } from "react-bootstrap";
 
 // context
 import { AuthContext } from "../context/AuthContext";
@@ -11,96 +13,158 @@ import { createAccountSchema } from "../utils/schemas";
 
 // components
 import CustomButton from "../components/CustomButton";
+import Loading from "../components/Loading";
 
 // utils
 import { initialCreateAccountState } from "../utils/initialStates";
+import CustomInput from "../components/CustomInput";
 
 const CreateAccountPage = () => {
   const [formState, setFormState] = useState(initialCreateAccountState);
   const [redirect, setRedirect] = useState(false);
 
-  const { fName, lName, email, password, confirmPassword } =
-    initialCreateAccountState;
-
   const {} = useContext(AuthContext);
 
+  const {
+    setCurrentPage,
+    currentPage,
+    pageData,
+    setPageData,
+    getPageData,
+    loading,
+    setLoading,
+    authLoading,
+    setAuthLoading,
+    authError,
+    setAuthError,
+    formErrors,
+    setFormErrors,
+    error,
+    setError,
+  } = useContext(AppManagementContext);
+
   const handleChange = async (e) => {
-    e.preventDefault();
+    const { name, value } = e.target;
+    setFormState((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
 
-  return (
-    <Stack gap={3} className="position-relative vh-100">
-      <div className="position-absolute top-50 start-50 translate-middle col-md-5">
-        <div className="pt-5 mt-5 h1 cinzel text-center">Create Account</div>
+  const handleSubmit = async (e) => {
+    console.log(`Clicked`);
+    e.preventDefault();
+    setAuthError(false);
+    setAuthLoading(true);
+    setFormErrors(initialCreateAccountState);
 
-        <div className="d-grid gap-2 text-center">
-          <Form>
+    try {
+      await createAccountSchema.validate(formState, {
+        abortEarly: false,
+      });
+
+      setAuthLoading(false);
+    } catch (e) {
+      if (e instanceof Yup.ValidationError) {
+        e.inner.map((e) => {
+          return setFormErrors((prev) => {
+            return {
+              ...prev,
+              [e.path]: e.message,
+            };
+          });
+        });
+      }
+
+      setAuthLoading(false);
+    }
+  };
+
+  useEffect(
+    () => {
+      (async () => {
+        console.log("firing");
+        setCurrentPage("CreateAccountPage");
+        setAuthLoading(false);
+        setAuthError(false);
+        setError(false);
+        console.log(currentPage);
+
+        if (currentPage) {
+          try {
+            const awaitPageData = await getPageData(currentPage);
+            setPageData(awaitPageData.data().data);
+            setLoading(false);
+          } catch (e) {
+            // use set error since this is just for form retrieval, not for an auth error
+            setError(e);
+          }
+        } else {
+          setError(
+            "Unable to retreive form data please try again later or contact a system administrator for more assistance."
+          );
+          setLoading(false);
+        }
+      })();
+    },
+    // eslint-disable-next-line
+    [currentPage]
+  );
+
+  return loading ? (
+    <Loading />
+  ) : (
+    <Container fluid>
+      <Stack gap={3} className="position-relative vh-100">
+        <div className="position-absolute top-50 start-50 translate-middle col-md-5">
+          <div className="pt-5 mt-5 h1 cinzel text-center">Create Account</div>
+
+          <Form onSubmit={handleSubmit}>
             <Row>
-              <Col xs={12} md={6}>
-                <FloatingLabel
-                  controlId="floating-first-name"
-                  label="First Name"
-                >
-                  <Form.Control
-                    type="text"
-                    placeholder="First Name"
-                    className="custom-input"
-                  />
-                </FloatingLabel>
-              </Col>
+              {pageData ? (
+                pageData.map((e, i) => {
+                  return (
+                    <CustomInput
+                      type={e.type}
+                      placeholder={e.placeholder}
+                      onChange={handleChange}
+                      name={e.name}
+                      value={formState[e.name]}
+                      xs={e.xs}
+                      md={e.md}
+                      key={`${e.name}-${i}`}
+                      errors={formErrors[e.name]}
+                    />
+                  );
+                })
+              ) : (
+                <Col xs={12} className="text-danger text-center h3">
+                  {error}
+                </Col>
+              )}
 
-              <Col xs={12} md={6}>
-                <FloatingLabel controlId="floating-last-name" label="Last Name">
-                  <Form.Control
-                    type="text"
-                    placeholder="Last Name"
-                    className="custom-input"
+              {!error ? (
+                <div className="d-grid gap-2 text-center">
+                  <CustomButton
+                    name="Create Account"
+                    handleClick={null}
+                    buttonType="custom-button"
+                    loading={authLoading}
                   />
-                </FloatingLabel>
-              </Col>
+                  <CustomButton
+                    name="Sign in with Google"
+                    handleClick={null}
+                    buttonType="custom-google-btn"
+                  />
+                </div>
+              ) : null}
             </Row>
-
-            <FloatingLabel controlId="floating-account-name" label="Email">
-              <Form.Control
-                type="email"
-                placeholder="Email"
-                className="custom-input"
-              />
-            </FloatingLabel>
-
-            <FloatingLabel controlId="floating-password" label="Password">
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                className="custom-input"
-              />
-            </FloatingLabel>
-
-            <FloatingLabel
-              controlId="floating-password-confirmation"
-              label="Confirm Password"
-            >
-              <Form.Control
-                type="password"
-                placeholder="Confirm Password"
-                className="custom-input"
-              />
-            </FloatingLabel>
           </Form>
-          <CustomButton
-            name="Create Account"
-            handleClick={null}
-            buttonType="custom-button"
-          />
-
-          <CustomButton
-            name="Sign in with Google"
-            handleClick={null}
-            buttonType="custom-google-btn"
-          />
         </div>
-      </div>
-    </Stack>
+      </Stack>
+    </Container>
   );
 };
 

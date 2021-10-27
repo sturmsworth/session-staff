@@ -13,14 +13,12 @@ import { displayYear } from "../utils/constants";
 
 const Footer = () => {
   return (
-    <>
-      <Container fluid className="footer-bg-highlight" />
-      <Container fluid className="text-center footer">
-        <Row>
-          <Col>Copyright &copy; {displayYear} Senate of Virginia</Col>
-        </Row>
-      </Container>
-    </>
+    <Container fluid>
+      <Row className="footer-bg-highlight" />
+      <Row className="footer text-center">
+        <Col>Copyright &copy; {displayYear} Senate of Virginia</Col>
+      </Row>
+    </Container>
   );
 };
 

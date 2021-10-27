@@ -1,16 +1,36 @@
-import React from "react";
+import { useContext } from "react";
 
+// context
+import { AppManagementContext } from "../context/AppManagementContext";
+
+// components
+import SmolLoading from "./SmolLoading";
+
+// styles
 import "../styles/CustomButton.scss";
 
-const CustomButton = ({ name, handleClick, buttonType, ...otherProps }) => {
+const CustomButton = ({
+  name,
+  handleClick,
+  buttonType,
+  loading,
+  ...otherProps
+}) => {
+  const { authLoading, smolLoading } = useContext(AppManagementContext);
   return buttonType === "custom-google-btn" ? (
     <button
       className={`${buttonType} btn btn-danger`}
       onClick={handleClick}
       {...otherProps}
     >
-      <i className="fab fa-google" />
-      <span>{` ${name}`}</span>
+      {smolLoading || authLoading ? (
+        <SmolLoading />
+      ) : (
+        <div>
+          <i className="fab fa-google" />
+          <span>{` ${name}`}</span>
+        </div>
+      )}
     </button>
   ) : (
     <button
@@ -18,7 +38,13 @@ const CustomButton = ({ name, handleClick, buttonType, ...otherProps }) => {
       onClick={handleClick}
       {...otherProps}
     >
-      {name}
+      {smolLoading || authLoading ? (
+        <SmolLoading />
+      ) : (
+        <div>
+          <span>{`${name}`}</span>
+        </div>
+      )}
     </button>
   );
 };
