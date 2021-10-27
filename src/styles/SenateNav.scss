@@ -1,0 +1,73 @@
+.navbar {
+  background-color: #5d170e;
+
+  .navbar-brand {
+    a {
+      font-family: "Cinzel";
+      color: #fae8d0 !important;
+      font-size: 1.15em;
+      text-decoration: none;
+
+      &:hover {
+        color: #97856a !important;
+        transition: 0.5s;
+      }
+
+      .senate-logo {
+        width: 1.75em;
+        margin-left: 0.5em;
+        margin-right: 1em;
+        border-radius: 5px;
+      }
+    }
+  }
+}
+
+.custom-toggler {
+  color: #fae8d0 !important;
+
+  &:hover {
+    color: #97856a !important;
+    transition: 0.5s;
+  }
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #fae8d0 !important;
+
+  &:hover {
+    color: #97856a !important;
+    border-bottom: 3px solid #97856a !important ;
+    margin-bottom: -3px;
+  }
+}
+
+.dropdown-menu {
+  background-color: #2d150a !important;
+}
+
+.dropdown-item {
+  text-decoration: none;
+  color: #fae8d0 !important;
+  background-color: #2d150a !important;
+
+  &:hover {
+    color: #97856a !important;
+    background-color: #fae8d0 !important;
+    transition: 0.5s;
+    text-decoration: none;
+  }
+
+  &:active {
+    color: #97856a !important;
+    background-color: #fae8d0 !important;
+  }
+}
+
+.nav-bg-highlight {
+  position: absolute;
+  padding-top: 5.25em;
+  width: 100%;
+  background-color: #2d150a !important;
+  z-index: 5;
+}

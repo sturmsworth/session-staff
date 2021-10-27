@@ -1,0 +1,43 @@
+.custom-button {
+  margin: 1.5em 0em 0em 0em;
+
+  span {
+    margin-left: 0.5em;
+  }
+}
+
+.btn {
+  &.custom-button {
+    color: white;
+    background-color: #11294c;
+    // box-shadow: 0px 5px 5px 0 rgba($color: grey, $alpha: 0.5);
+
+    &:hover {
+      color: whitesmoke;
+      background-color: #1e4785;
+    }
+
+    &:active {
+      transform: translateY(4px);
+      transition: 0s;
+      box-shadow: 0px 0px 5px 0;
+    }
+  }
+
+  &.custom-button-red {
+    color: white;
+    background-color: #5d170e !important;
+    box-shadow: 0px 5px 5px 0 rgba($color: grey, $alpha: 0.5);
+
+    &:hover {
+      color: whitesmoke;
+      background-color: #af2819 !important;
+    }
+
+    &:active {
+      transform: translateY(4px);
+      transition: 0s;
+      box-shadow: 0px 0px 5px 0;
+    }
+  }
+}
