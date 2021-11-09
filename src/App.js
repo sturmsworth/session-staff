@@ -12,6 +12,7 @@ import * as ROUTES from "./routes";
 import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SignInPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
+import RegistrationSuccessPage from "./pages/RegistrationSuccessPage";
 
 // components
 import SenateNav from "./components/SenateNav";
@@ -34,10 +35,10 @@ function App() {
                 path={ROUTES.CREATE_ACCOUNT}
                 component={CreateAccountPage}
               />
-              {/* <Route
-                path={ROUTES.SUCCESS}
-                component={}
-              /> */}
+              <Route
+                path={ROUTES.REGISTRATION_SUCCESS}
+                component={RegistrationSuccessPage}
+              />
             </Switch>
             <SenateFooter />
           </AuthContextProvider>

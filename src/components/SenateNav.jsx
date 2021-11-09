@@ -31,7 +31,7 @@ const NavigationBar = () => {
   const [icon, setIcon] = useState(true);
 
   // context
-  const { currentUser, currentAdmin, signOut } = useContext(AuthContext);
+  const { currentUser, currentAdmin, signUserOut } = useContext(AuthContext);
 
   const changeIcon = () => {
     setIcon(!icon);
@@ -86,7 +86,11 @@ const NavigationBar = () => {
                       My Account
                     </Link>
 
-                    <Link to={HOME} onClick={signOut} className="dropdown-item">
+                    <Link
+                      to={HOME}
+                      onClick={signUserOut}
+                      className="dropdown-item"
+                    >
                       Sign Out
                     </Link>
                   </div>
@@ -96,7 +100,11 @@ const NavigationBar = () => {
                       My Dashboard
                     </Link>
 
-                    <Link to={HOME} onClick={signOut} className="dropdown-item">
+                    <Link
+                      to={HOME}
+                      onClick={signUserOut}
+                      className="dropdown-item"
+                    >
                       Sign Out
                     </Link>
                   </div>

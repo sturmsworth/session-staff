@@ -21,10 +21,10 @@ const AppManagementContextProvider = ({ children }) => {
 
   // const [constants, setConstants] = useState({});
   const [currentPage, setCurrentPage] = useState(null);
+  const [redirect, setRedirect] = useState(false);
   const [pageData, setPageData] = useState(null);
 
   const getPageData = (currentPage) => {
-    console.log("retrieving page data");
     const docRef = doc(db, "formControl", currentPage);
     const docSnap = getDoc(docRef);
     return docSnap;
@@ -50,6 +50,8 @@ const AppManagementContextProvider = ({ children }) => {
         pageData,
         setPageData,
         getPageData,
+        redirect,
+        setRedirect,
       }}
     >
       {children}

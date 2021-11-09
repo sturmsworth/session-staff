@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from "react";
+import { Redirect } from "react-router";
 import * as Yup from "yup";
 
 // bootstrap
@@ -14,16 +15,19 @@ import { createAccountSchema } from "../utils/schemas";
 // components
 import CustomButton from "../components/CustomButton";
 import Loading from "../components/Loading";
+import CustomInput from "../components/CustomInput";
 
 // utils
 import { initialCreateAccountState } from "../utils/initialStates";
-import CustomInput from "../components/CustomInput";
+
+// routes
+import { REGISTRATION_SUCCESS } from "../routes";
 
 const CreateAccountPage = () => {
   const [formState, setFormState] = useState(initialCreateAccountState);
-  const [redirect, setRedirect] = useState(false);
 
-  const {} = useContext(AuthContext);
+  const { signUserOut, signUserUp, sendVerificationEmail, updateDisplayName } =
+    useContext(AuthContext);
 
   const {
     setCurrentPage,
@@ -41,6 +45,8 @@ const CreateAccountPage = () => {
     setFormErrors,
     error,
     setError,
+    redirect,
+    setRedirect,
   } = useContext(AppManagementContext);
 
   const handleChange = async (e) => {
@@ -53,9 +59,14 @@ const CreateAccountPage = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    console.log(`Clicked`);
+  const handleClick = async (e) => {
     e.preventDefault();
+    console.log("Logging in with Google");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     setAuthError(false);
     setAuthLoading(true);
     setFormErrors(initialCreateAccountState);
@@ -64,8 +75,13 @@ const CreateAccountPage = () => {
       await createAccountSchema.validate(formState, {
         abortEarly: false,
       });
+      await signUserUp(formState);
+      await updateDisplayName(formState);
+      await sendVerificationEmail();
+      await signUserOut();
 
       setAuthLoading(false);
+      setRedirect(true);
     } catch (e) {
       if (e instanceof Yup.ValidationError) {
         e.inner.map((e) => {
@@ -76,6 +92,8 @@ const CreateAccountPage = () => {
             };
           });
         });
+      } else {
+        setAuthError(e);
       }
 
       setAuthLoading(false);
@@ -85,12 +103,13 @@ const CreateAccountPage = () => {
   useEffect(
     () => {
       (async () => {
-        console.log("firing");
+        setLoading(true);
+        setPageData(null);
         setCurrentPage("CreateAccountPage");
         setAuthLoading(false);
         setAuthError(false);
         setError(false);
-        console.log(currentPage);
+        setRedirect(false);
 
         if (currentPage) {
           try {
@@ -115,6 +134,8 @@ const CreateAccountPage = () => {
 
   return loading ? (
     <Loading />
+  ) : redirect ? (
+    <Redirect to={REGISTRATION_SUCCESS} />
   ) : (
     <Container fluid>
       <Stack gap={3} className="position-relative vh-100">
@@ -145,17 +166,22 @@ const CreateAccountPage = () => {
                 </Col>
               )}
 
+              {authError ? (
+                <div className="d-grid gap-2 text-center mt-3 text-danger">
+                  {authError.code}
+                </div>
+              ) : null}
+
               {!error ? (
                 <div className="d-grid gap-2 text-center">
                   <CustomButton
                     name="Create Account"
-                    handleClick={null}
                     buttonType="custom-button"
                     loading={authLoading}
                   />
                   <CustomButton
                     name="Sign in with Google"
-                    handleClick={null}
+                    handleClick={handleClick}
                     buttonType="custom-google-btn"
                   />
                 </div>
