@@ -3,7 +3,7 @@ import { Redirect } from "react-router";
 import * as Yup from "yup";
 
 // bootstrap
-import { Stack, Form, Row, Col, Container } from "react-bootstrap";
+import { Stack, Form, Row, Container } from "react-bootstrap";
 
 // context
 import { AuthContext } from "../context/AuthContext";
@@ -14,39 +14,31 @@ import { createAccountSchema } from "../utils/schemas";
 
 // components
 import CustomButton from "../components/CustomButton";
-import Loading from "../components/Loading";
 import CustomInput from "../components/CustomInput";
 
 // utils
 import { initialCreateAccountState } from "../utils/initialStates";
+import { createAccountPageLoadData } from "../utils/constants";
 
 // routes
 import { REGISTRATION_SUCCESS } from "../routes";
 
 const CreateAccountPage = () => {
   const [formState, setFormState] = useState(initialCreateAccountState);
+  const [componentLoading, setComponentLoading] = useState(false);
 
   const { signUserOut, signUserUp, sendVerificationEmail, updateDisplayName } =
     useContext(AuthContext);
 
   const {
-    setCurrentPage,
-    currentPage,
-    pageData,
-    setPageData,
-    getPageData,
-    loading,
-    setLoading,
-    authLoading,
-    setAuthLoading,
     authError,
     setAuthError,
     formErrors,
     setFormErrors,
     error,
-    setError,
     redirect,
     setRedirect,
+    clearErrors,
   } = useContext(AppManagementContext);
 
   const handleChange = async (e) => {
@@ -66,9 +58,8 @@ const CreateAccountPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setAuthError(false);
-    setAuthLoading(true);
+    setComponentLoading(true);
     setFormErrors(initialCreateAccountState);
 
     try {
@@ -80,7 +71,6 @@ const CreateAccountPage = () => {
       await sendVerificationEmail();
       await signUserOut();
 
-      setAuthLoading(false);
       setRedirect(true);
     } catch (e) {
       if (e instanceof Yup.ValidationError) {
@@ -95,46 +85,18 @@ const CreateAccountPage = () => {
       } else {
         setAuthError(e);
       }
-
-      setAuthLoading(false);
     }
   };
 
   useEffect(
     () => {
-      (async () => {
-        setLoading(true);
-        setPageData(null);
-        setCurrentPage("CreateAccountPage");
-        setAuthLoading(false);
-        setAuthError(false);
-        setError(false);
-        setRedirect(false);
-
-        if (currentPage) {
-          try {
-            const awaitPageData = await getPageData(currentPage);
-            setPageData(awaitPageData.data().data);
-            setLoading(false);
-          } catch (e) {
-            // use set error since this is just for form retrieval, not for an auth error
-            setError(e);
-          }
-        } else {
-          setError(
-            "Unable to retreive form data please try again later or contact a system administrator for more assistance."
-          );
-          setLoading(false);
-        }
-      })();
+      clearErrors();
     },
     // eslint-disable-next-line
-    [currentPage]
+    []
   );
 
-  return loading ? (
-    <Loading />
-  ) : redirect ? (
+  return redirect ? (
     <Redirect to={REGISTRATION_SUCCESS} />
   ) : (
     <Container fluid>
@@ -144,27 +106,21 @@ const CreateAccountPage = () => {
 
           <Form onSubmit={handleSubmit}>
             <Row>
-              {pageData ? (
-                pageData.map((e, i) => {
-                  return (
-                    <CustomInput
-                      type={e.type}
-                      placeholder={e.placeholder}
-                      onChange={handleChange}
-                      name={e.name}
-                      value={formState[e.name]}
-                      xs={e.xs}
-                      md={e.md}
-                      key={`${e.name}-${i}`}
-                      errors={formErrors[e.name]}
-                    />
-                  );
-                })
-              ) : (
-                <Col xs={12} className="text-danger text-center h3">
-                  {error}
-                </Col>
-              )}
+              {createAccountPageLoadData.map((e, i) => {
+                return (
+                  <CustomInput
+                    type={e.type}
+                    placeholder={e.placeholder}
+                    onChange={handleChange}
+                    name={e.name}
+                    value={formState[e.name]}
+                    xs={e.xs}
+                    md={e.md}
+                    key={`${e.name}-${i}`}
+                    errors={formErrors[e.name]}
+                  />
+                );
+              })}
 
               {authError ? (
                 <div className="d-grid gap-2 text-center mt-3 text-danger">
@@ -177,7 +133,7 @@ const CreateAccountPage = () => {
                   <CustomButton
                     name="Create Account"
                     buttonType="custom-button"
-                    loading={authLoading}
+                    loading={componentLoading}
                   />
                   <CustomButton
                     name="Sign in with Google"

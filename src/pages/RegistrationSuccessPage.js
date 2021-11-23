@@ -11,27 +11,14 @@ import { Stack, Container } from "react-bootstrap";
 import { AppManagementContext } from "../context/AppManagementContext";
 
 const RegistrationSuccessPage = () => {
-  const {
-    setCurrentPage,
-    currentPage,
-    setAuthLoading,
-    setAuthError,
-    setError,
-    setRedirect,
-    setPageData,
-  } = useContext(AppManagementContext);
+  const { clearErrors } = useContext(AppManagementContext);
 
   useEffect(
     () => {
-      setPageData(null);
-      setCurrentPage("RegistrationSuccessPage");
-      setAuthLoading(false);
-      setAuthError(false);
-      setError(false);
-      setRedirect(false);
+      clearErrors();
     },
     // eslint-disable-next-line
-    [currentPage]
+    []
   );
 
   return (

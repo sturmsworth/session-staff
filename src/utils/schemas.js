@@ -38,3 +38,41 @@ export const signInSchema = yupObject({
     .required("Required"),
   password: Yup.string().required("Required"),
 });
+
+export const personalInformationSchema = yupObject({
+  fName: Yup.string().trim().required("Required"),
+  lName: Yup.string().trim().required("Required"),
+  pName: Yup.string().trim(),
+  address: Yup.string().trim().required("Required"),
+  addressTwo: Yup.string().trim(),
+  city: Yup.string().trim().required("Required"),
+  state: Yup.string().trim().required("Required"),
+  zip: Yup.string()
+    .trim()
+    .length(5, `Your zip code can only be 5 numbers long`)
+    .required("Required"),
+  phone: Yup.string().trim().required("Required"),
+  phoneType: Yup.string().trim().required("Required"),
+  email: Yup.string()
+    .email("Please enter a valid email format")
+    .trim()
+    .required("Required"),
+  position: Yup.string().trim().required("Required"),
+  member: Yup.string().trim(),
+  sessionAddressDifferent: Yup.string().trim().required("Required"),
+  sessionAddress: Yup.string().trim(),
+  sessionAddressTwo: Yup.string().trim(),
+  sessionCity: Yup.string().trim(),
+  sessionState: Yup.string().trim(),
+  sessionZip: Yup.string().trim(),
+  transportation: Yup.string().trim().required("Required"),
+  selectiveService: Yup.string().trim().required("Required"),
+});
+
+export const emergencyContactInfoSchema = yupObject({
+  fName: Yup.string().trim().required("Required"),
+  lName: Yup.string().trim().required("Required"),
+  relationship: Yup.string().trim().required("Required"),
+  phone: Yup.string().trim().required("Required"),
+  phoneType: Yup.string().trim().required("Required"),
+});

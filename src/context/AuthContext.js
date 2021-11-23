@@ -20,11 +20,9 @@ const { Provider } = AuthContext;
 const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentAdmin, setCurrentAdmin] = useState(null);
-  const [currentFinance, setCurrentFinance] = useState(true);
+  const [currentFiscal, setCurrentFiscal] = useState(null);
+  const [currentSupport, setCurrentSupport] = useState(null);
   const [adminError, setAdminError] = useState(null);
-
-  // const getYear = (new Date().getFullYear() + 1).toString();
-  // // const userRef =
 
   const signUserIn = (values) => {
     const { email, password } = values;
@@ -63,15 +61,25 @@ const AuthContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // return unsubscribe;
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
-    });
-  }, []);
+    let isMounted = true;
+    const authMonitor = () => {
+      onAuthStateChanged(auth, (user) => {
+        if (isMounted) {
+          if (user) {
+            setCurrentUser(user);
+          } else {
+            setCurrentUser(null);
+          }
+        }
+      });
+    };
+
+    authMonitor();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser]);
 
   return (
     <Provider
@@ -80,8 +88,10 @@ const AuthContextProvider = ({ children }) => {
         setCurrentUser,
         currentAdmin,
         setCurrentAdmin,
-        currentFinance,
-        setCurrentFinance,
+        currentFiscal,
+        setCurrentFiscal,
+        currentSupport,
+        setCurrentSupport,
         adminError,
         setAdminError,
         sendVerificationEmail,
