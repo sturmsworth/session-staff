@@ -1,0 +1,48 @@
+.dropzone {
+  padding: 10px;
+  border-bottom: 10px solid #11294c;
+  background-color: #fdf6ed;
+  color: #bdbdbd;
+  text-align: center;
+  margin: 0 auto;
+  width: 75%;
+  padding: 3em 0;
+
+  p {
+    text-align: center;
+  }
+}
+
+.accept {
+  border-color: #107c10 !important;
+}
+
+.reject {
+  border-color: #d83b01 !important;
+}
+
+.preview-document {
+  color: black !important;
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+}
+
+.preview-image {
+  border: 10px solid #11294c;
+}
+
+.remove-document-button {
+  margin-top: 0 !important;
+  margin-bottom: 1em !important;
+}
+
+.styled-link {
+  color: #11294c;
+}
+
+.styled-link:hover {
+  color: #245bad;
+}

@@ -19,10 +19,16 @@ export const generateDocumentYear = () => {
   }
 };
 //
-export const phoneTypesArray = ["Phone Type", "Work", "Home", "Cell"];
+export const phoneTypesArray = [
+  "Select One",
+  "Phone Type",
+  "Work",
+  "Home",
+  "Cell",
+];
 //
 export const statesArray = [
-  "State",
+  "Select One",
   "AK",
   "AL",
   "AR",
@@ -91,7 +97,7 @@ export const positionsArray = [
 ];
 //
 export const districtArray = [
-  `Select your Senator`,
+  "Select One",
   `Barker, George L. (39th District)`,
   `Bell, John J. (13th District)`,
   `Boysko, Jennifer B. (33rd District)`,
@@ -236,7 +242,7 @@ export const formURLs = [
   {
     name: "dd",
     printedName: "Direct Deposit Form *",
-    href: "https://firebasestorage.googleapis.com/v0/b/session-staff-hooks.appspot.com/o/forms%2FDirect%20Deposit%202019.pdf?alt=media&token=9dc8c421-2944-4f0e-be4d-aaaffde67be6",
+    href: "https://firebasestorage.googleapis.com/v0/b/session-staff-hooks.appspot.com/o/forms%2FDDeposit.pdf?alt=media&token=5f81eacc-bfbc-499d-91e5-c0c4215ec5bc",
   },
   {
     name: "id",
@@ -247,6 +253,11 @@ export const formURLs = [
     name: "pf",
     printedName: "Parking Request Form",
     href: "https://firebasestorage.googleapis.com/v0/b/session-staff-hooks.appspot.com/o/forms%2FParking-Form.pdf?alt=media&token=8287c1a9-c4a2-45e5-8526-448dac39f582",
+  },
+  {
+    name: "ss",
+    printedName: "Selective Service Form",
+    href: "https://firebasestorage.googleapis.com/v0/b/session-staff-hooks.appspot.com/o/forms%2FSelective%20Service%20Form2021.pdf?alt=media&token=241d2425-e210-4bef-91d3-5923ccd22d59",
   },
 ];
 //
@@ -459,6 +470,7 @@ export const emergencyContactPageLoadData = [
 //
 // ********************************** AttachmentsPage.js
 //
+// each one of these alternates between Title and attachmentType
 export const attachmentsPageLoadData = [
   {
     title: "VA-4 Form",
@@ -482,14 +494,14 @@ export const attachmentsPageLoadData = [
   },
   {
     title: "Direct Deposit Form",
+    subtitle:
+      "Please note that the Direct Deposit Form requires additional documentation. Please be sure to include all documentation in one file at the time of submission.",
   },
   {
     attachmentType: "dd",
   },
   {
     title: "Identification/Access Card Form",
-    subtitle:
-      "Please note that the Direct Deposit Form requires additional documentation. Please be sure to include all documentation in one file at the time of submission.",
   },
   {
     attachmentType: "id",
@@ -499,5 +511,11 @@ export const attachmentsPageLoadData = [
   },
   {
     attachmentType: "pf",
+  },
+  {
+    title: "Selective Service Confirmation Form",
+  },
+  {
+    attachmentType: "ss",
   },
 ];

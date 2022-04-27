@@ -76,4 +76,5 @@ export const initialAttachmentsDataState = {
   dd: null,
   id: null,
   pf: null,
+  ss: null,
 };

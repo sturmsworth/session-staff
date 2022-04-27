@@ -4,15 +4,20 @@ import React, { createContext, useState, useEffect } from "react";
 import { HOME } from "../routes";
 
 // firebase config
-import { auth } from "../utils/firebase";
+import { auth, provider } from "../utils/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   sendEmailVerification,
+  sendPasswordResetEmail,
   updateProfile,
   signOut,
+  signInWithPopup,
 } from "firebase/auth";
+
+// access
+import { supportAccessArray, fiscalAccessArray } from "../utils/access";
 
 export const AuthContext = createContext();
 const { Provider } = AuthContext;
@@ -38,6 +43,29 @@ const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  const adminSignIn = async () => {
+    setAdminError(null);
+
+    provider.setCustomParameters({
+      hd: "senate.virginia.gov",
+    });
+
+    const signIn = await signInWithPopup(auth, provider);
+    const user = signIn.user;
+
+    const findSupport = supportAccessArray.includes(user.email);
+    const findFiscal = fiscalAccessArray.includes(user.email);
+
+    if (findSupport || findFiscal) {
+      return user;
+    } else {
+      auth.signOut();
+      setAdminError(
+        "Your email was not found, please select the proper administrator account and try again."
+      );
+    }
+  };
+
   const updateDisplayName = (values) => {
     const { fName, lName } = values;
     console.log(`updateDisplayName`, fName, lName);
@@ -51,34 +79,51 @@ const AuthContextProvider = ({ children }) => {
   const sendVerificationEmail = () => {
     const actionCodeSettings = {
       // for testing
-      url: `http://localhost:3000${HOME}`,
+      // url: `http://localhost:3000${HOME}`,
       // for builds
-      // url: ``,
+      url: `https://apps.senate.virginia.gov${HOME}`,
       handleCodeInApp: true,
     };
 
     return sendEmailVerification(auth.currentUser, actionCodeSettings);
   };
 
+  const sendPasswordReset = (values) => {
+    const { email } = values;
+
+    sendPasswordResetEmail(auth, email);
+  };
+
   useEffect(() => {
-    let isMounted = true;
-    const authMonitor = () => {
-      onAuthStateChanged(auth, (user) => {
-        if (isMounted) {
-          if (user) {
-            setCurrentUser(user);
-          } else {
-            setCurrentUser(null);
-          }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const findSupport = supportAccessArray.includes(user.email);
+        const findFiscal = fiscalAccessArray.includes(user.email);
+
+        if (findFiscal) {
+          setCurrentFiscal({
+            ...user,
+            displayName: `Fiscal - ${user.displayName}`,
+          });
+        } else if (findSupport) {
+          setCurrentSupport({
+            ...user,
+            displayName: `Support - ${user.displayName}`,
+          });
+        } else {
+          setCurrentUser(user);
         }
-      });
-    };
+      } else {
+        setCurrentUser(null);
+        setCurrentFiscal(null);
+        setCurrentSupport(null);
+        setCurrentAdmin(null);
+      }
+    });
 
-    authMonitor();
+    return unsubscribe;
 
-    return () => {
-      isMounted = false;
-    };
+    // eslint-disable-next-line
   }, [currentUser]);
 
   return (
@@ -95,10 +140,12 @@ const AuthContextProvider = ({ children }) => {
         adminError,
         setAdminError,
         sendVerificationEmail,
+        sendPasswordReset,
         updateDisplayName,
         signUserUp,
         signUserIn,
         signUserOut,
+        adminSignIn,
       }}
     >
       {children}

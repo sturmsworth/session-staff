@@ -46,27 +46,75 @@ export const personalInformationSchema = yupObject({
   address: Yup.string().trim().required("Required"),
   addressTwo: Yup.string().trim(),
   city: Yup.string().trim().required("Required"),
-  state: Yup.string().trim().required("Required"),
+  state: Yup.string()
+    .trim()
+    .required("Required")
+    .test(
+      "not-select",
+      "Please Select an Option",
+      (value) => value !== "Select One"
+    ),
   zip: Yup.string()
     .trim()
     .length(5, `Your zip code can only be 5 numbers long`)
     .required("Required"),
   phone: Yup.string().trim().required("Required"),
-  phoneType: Yup.string().trim().required("Required"),
+  phoneType: Yup.string()
+    .trim()
+    .required("Required")
+    .test(
+      "not-select",
+      "Please Select an Option",
+      (value) => value !== "Select One"
+    ),
   email: Yup.string()
     .email("Please enter a valid email format")
     .trim()
     .required("Required"),
-  position: Yup.string().trim().required("Required"),
-  member: Yup.string().trim(),
-  sessionAddressDifferent: Yup.string().trim().required("Required"),
+  position: Yup.string()
+    .trim()
+    .required("Required")
+    .test(
+      "not-select",
+      "Please Select an Option",
+      (value) => value !== "Select One"
+    ),
+  member: Yup.string()
+    .trim()
+    .test(
+      "not-select",
+      "Please Select an Option",
+      (value) => value !== "Select One"
+    ),
+  sessionAddressDifferent: Yup.string()
+    .trim()
+    .required("Required")
+    .test(
+      "not-select",
+      "Please Select an Option",
+      (value) => value !== "Select One"
+    ),
   sessionAddress: Yup.string().trim(),
   sessionAddressTwo: Yup.string().trim(),
   sessionCity: Yup.string().trim(),
   sessionState: Yup.string().trim(),
   sessionZip: Yup.string().trim(),
-  transportation: Yup.string().trim().required("Required"),
-  selectiveService: Yup.string().trim().required("Required"),
+  transportation: Yup.string()
+    .trim()
+    .required("Required")
+    .test(
+      "not-select",
+      "Please Select an Option",
+      (value) => value !== "Select One"
+    ),
+  selectiveService: Yup.string()
+    .trim()
+    .required("Required")
+    .test(
+      "not-select",
+      "Please Select an Option",
+      (value) => value !== "Select One"
+    ),
 });
 
 export const emergencyContactInfoSchema = yupObject({

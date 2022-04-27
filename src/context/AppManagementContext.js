@@ -1,8 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
-
-// firebase
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../utils/firebase";
+import React, { createContext, useState } from "react";
 
 export const AppManagementContext = createContext();
 const { Provider } = AppManagementContext;

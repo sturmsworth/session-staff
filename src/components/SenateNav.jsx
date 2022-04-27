@@ -31,7 +31,8 @@ const NavigationBar = () => {
   const [icon, setIcon] = useState(true);
 
   // context
-  const { currentUser, currentAdmin, signUserOut } = useContext(AuthContext);
+  const { currentUser, currentFiscal, currentSupport, signUserOut } =
+    useContext(AuthContext);
 
   const changeIcon = () => {
     setIcon(!icon);
@@ -74,8 +75,10 @@ const NavigationBar = () => {
                 title={
                   currentUser
                     ? `${currentUser.displayName}`
-                    : currentAdmin !== null
-                    ? `${currentAdmin.displayName}`
+                    : currentSupport !== null
+                    ? `${currentSupport.displayName}`
+                    : currentFiscal !== null
+                    ? `${currentFiscal.displayName}`
                     : `Get Started`
                 }
                 className="custom-nav-dropdown mr-5"
@@ -94,7 +97,7 @@ const NavigationBar = () => {
                       Sign Out
                     </Link>
                   </div>
-                ) : currentAdmin ? (
+                ) : currentFiscal || currentSupport ? (
                   <div>
                     <Link to={ADMIN_DASHBOARD} className="dropdown-item">
                       My Dashboard

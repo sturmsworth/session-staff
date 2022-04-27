@@ -1,0 +1,34 @@
+.contact-title {
+  color: #701321;
+  font-family: "Cinzel";
+  font-size: 3.5em;
+}
+
+.contact-subtitle {
+  color: #701321;
+  font-family: "Cinzel";
+  font-size: 2em;
+}
+
+.contact-wheel-one {
+  background-color: #97856a;
+  border-radius: 50%;
+  height: 300px;
+  width: 300px !important;
+}
+
+.contact-wheel-one:hover {
+  background-color: #584e3e;
+}
+
+.about-icon {
+  margin: 50px 0px;
+
+  a {
+    color: #97856a !important;
+  }
+
+  a:hover {
+    color: #584e3e !important;
+  }
+}

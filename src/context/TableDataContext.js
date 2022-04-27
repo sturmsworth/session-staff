@@ -1,13 +1,12 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 // initial states
 import { initialAttachmentsDataState } from "../utils/initialStates";
 
 // firebase
-import { db } from "../utils/firebase";
+import { db, storage } from "../utils/firebase";
 import {
   doc,
-  setDoc,
   getDoc,
   updateDoc,
   collection,
@@ -17,8 +16,12 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-// context
-import { AuthContext } from "./AuthContext";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
 
 // constants
 import { generateDocumentYear } from "../utils/constants";
@@ -28,9 +31,6 @@ const { Provider } = TableDataContext;
 
 const TableDataContextProvider = ({ children }) => {
   const getYear = generateDocumentYear();
-  const { currentAdmin, currentFiscal, currentSupport } =
-    useContext(AuthContext);
-
   const [yearData, setYearData] = useState([]);
   const [currentEmail, setCurrentEmail] = useState(null);
   const [tableMetaData, setTableMetaData] = useState([]);
@@ -67,7 +67,7 @@ const TableDataContextProvider = ({ children }) => {
   const getAllMetaData = async () => {
     const tableDataArray = [];
     const metaDataQuery = query(
-      collection(db, `years/${getYear}/metaData`),
+      collection(db, `years/${year}/metaData`),
       orderBy(`displayName`)
     );
 
@@ -112,12 +112,75 @@ const TableDataContextProvider = ({ children }) => {
     return docSnap;
   };
 
-  useEffect(() => {
-    getAllYears();
-    getAllMetaData();
+  const updateUserFormInfo = (data) => {
+    const docRef = doc(db, `years/${getYear}/formData`, currentEmail);
+    const updateForm = updateDoc(docRef, { ...data });
 
-    setTableLoading(false);
-  }, []);
+    return updateForm;
+  };
+
+  const getSingleUserAttachmentInfo = () => {
+    const attachmentsRef = doc(
+      db,
+      `years/${getYear}/attachmentsData`,
+      currentEmail
+    );
+    const docSnap = getDoc(attachmentsRef);
+
+    return docSnap;
+  };
+
+  const deleteUserAttachment = async (attachmentType, files) => {
+    await files.map(async (file) => {
+      const filePath = `${year}/${currentEmail}/${attachmentType}/${file.name}`;
+      const storageRef = ref(storage, filePath);
+
+      try {
+        deleteObject(storageRef);
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  };
+
+  const updateUserAttachmentAndGetUrl = async (file, attachmentType) => {
+    const filePath = `${year}/${currentEmail}/${attachmentType}/${file.name}`;
+    const storageRef = ref(storage, filePath);
+    const uploadTask = uploadBytes(storageRef, file);
+    const snapshot = await uploadTask;
+
+    try {
+      const getURL = await getDownloadURL(snapshot.ref);
+      return getURL;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const updateUserAttachmentInfo = (data) => {
+    const docRef = doc(db, `years/${getYear}/attachmentsData`, currentEmail);
+    const updateForm = updateDoc(docRef, { ...data });
+
+    return updateForm;
+  };
+
+  useEffect(
+    () => {
+      if (showCompletedChecked) {
+        setTableLoading(true);
+        getCompletedMetaData();
+      } else {
+        setTableLoading(true);
+        getAllMetaData();
+      }
+
+      getAllYears();
+
+      setTableLoading(false);
+    },
+    // eslint-disable-next-line
+    [year]
+  );
 
   return (
     <Provider
@@ -155,6 +218,11 @@ const TableDataContextProvider = ({ children }) => {
         setShowEmergencyInfoModal,
         getCompletedMetaData,
         getSingleUserFormInfo,
+        updateUserFormInfo,
+        getSingleUserAttachmentInfo,
+        deleteUserAttachment,
+        updateUserAttachmentAndGetUrl,
+        updateUserAttachmentInfo,
       }}
     >
       {children}

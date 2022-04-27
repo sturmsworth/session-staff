@@ -1,0 +1,24 @@
+.progress-tracker {
+  background-color: whitesmoke;
+  border-bottom: 10px solid #11294c;
+  box-shadow: 2px 2px 5px #d4d4d4;
+
+  .h3 {
+    color: #3e899f;
+    font-family: "Cinzel";
+    font-weight: bold;
+  }
+
+  .h3:after {
+    content: "";
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    padding: 5px 5px;
+    border-bottom: 2px solid #97856a;
+  }
+}
+
+.progress {
+  height: 2.5em !important;
+}
