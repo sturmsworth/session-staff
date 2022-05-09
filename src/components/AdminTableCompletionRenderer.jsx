@@ -15,19 +15,31 @@ const AdminTableCompletionRenderer = ({ row }) => {
       >
         <span
           className={
-            row.original.personalInfo === "completed" &&
-            row.original.emergencyContactInfo === "completed" &&
-            row.original.attachments === "completed"
+            row.original.position === `Legislative Assistant` ||
+            row.original.position === `Intern`
+              ? row.original.personalInfo === "completed" &&
+                row.original.emergencyContactInfo === "completed"
+                ? `text-success`
+                : `text-danger`
+              : row.original.personalInfo === "completed" &&
+                row.original.emergencyContactInfo === "completed" &&
+                row.original.attachments === "completed"
               ? "text-success"
               : "text-danger"
           }
         >
           {`${
-            row.original.personalInfo === "completed" &&
-            row.original.emergencyContactInfo === "completed" &&
-            row.original.attachments === "completed"
-              ? "Complete"
-              : "Incomplete"
+            row.original.position === `Legislative Assistant` ||
+            row.original.position === `Intern`
+              ? row.original.personalInfo === "completed" &&
+                row.original.emergencyContactInfo === "completed"
+                ? `Complete`
+                : `Incomplete`
+              : row.original.personalInfo === "completed" &&
+                row.original.emergencyContactInfo === "completed" &&
+                row.original.attachments === "completed"
+              ? `Complete`
+              : `Incomplete`
           }`}
           {/* Overlay Trigger and everything inside it controls the tooltip layout */}
           <OverlayTrigger

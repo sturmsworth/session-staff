@@ -87,7 +87,7 @@ const TableDataContextProvider = ({ children }) => {
   const getCompletedMetaData = async () => {
     const tableDataArray = [];
     const metaDataQuery = query(
-      collection(db, `years/${getYear}/metaData`),
+      collection(db, `years/${year}/metaData`),
       where("completed", "==", true),
       orderBy(`displayName`)
     );
@@ -106,14 +106,14 @@ const TableDataContextProvider = ({ children }) => {
   };
 
   const getSingleUserFormInfo = () => {
-    const docRef = doc(db, `years/${getYear}/formData`, currentEmail);
+    const docRef = doc(db, `years/${year}/formData`, currentEmail);
     const docSnap = getDoc(docRef);
 
     return docSnap;
   };
 
   const updateUserFormInfo = (data) => {
-    const docRef = doc(db, `years/${getYear}/formData`, currentEmail);
+    const docRef = doc(db, `years/${year}/formData`, currentEmail);
     const updateForm = updateDoc(docRef, { ...data });
 
     return updateForm;
@@ -122,7 +122,7 @@ const TableDataContextProvider = ({ children }) => {
   const getSingleUserAttachmentInfo = () => {
     const attachmentsRef = doc(
       db,
-      `years/${getYear}/attachmentsData`,
+      `years/${year}/attachmentsData`,
       currentEmail
     );
     const docSnap = getDoc(attachmentsRef);
@@ -158,7 +158,7 @@ const TableDataContextProvider = ({ children }) => {
   };
 
   const updateUserAttachmentInfo = (data) => {
-    const docRef = doc(db, `years/${getYear}/attachmentsData`, currentEmail);
+    const docRef = doc(db, `years/${year}/attachmentsData`, currentEmail);
     const updateForm = updateDoc(docRef, { ...data });
 
     return updateForm;
