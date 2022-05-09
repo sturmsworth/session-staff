@@ -1,3 +1,50 @@
+# Developer notes
+
+# Year updates must be made on this system after 2024.
+
+Admin tables need to be updated each year after 2024.
+This needs to be done inside the Google Firebase console
+https://console.firebase.google.com - when logged in with sis_admin@senate.virginia.gov)
+
+From the Firebase Developer Console
+
+1. select "session-staff-hooks"
+2. in the menu located on the left side select "Firestore Database"
+3. select "yearsList"
+4. Click "Add Document"
+5. For the document ID just click on "Auto-ID"
+6. In the blank Field below the Document ID type in "year" - make sure this is all lowercase
+7. keep the Type "string"
+8. in the blank "Value" field type in the year you're adding (example: 2025)
+9. Click save
+
+# To update the downloadble PDF Forrms:
+
+From the Firebase Developer Console
+
+1. select "session-staff-hooks"
+2. in the menu located on the left side select "Storage"
+3. click the "forms/" folder
+4. use the GUI interface checkboxes to delete any necessary older forms.
+5. Click "Upload file" and select the new PDF you're trying to upload
+   - PLEASE MAKE SURE YOU'RE UPLOADING ONLY PDF FILES
+   - MAKE SURE THE PDF FIELDS ARE FILLABLE
+6. Once the file is successfully update, please click the file and a menu will appear on the right.
+7. Where it says "Name" on the menu, a link should appear that you can click. Click it.
+8. This will open your document with the applicable URL in a new tab in your browser.
+9. Copy the URL from the address bar in your browser.
+10. Inside the folder structure for the application navigate to the following and open the file:
+    - ./src/utils/constants.js
+11. on line 226 of constants.js you will find an array of objects titled "formURLs"
+12. locate the object of the form you're trying to update
+    - example:
+      - name: "dd" - is the name property of the Direct Deposit form
+      - or you can refer to the printedName property of the object for more details.
+13. In the "href" property past the new URL into it. Make sure it's between the quotation marks.
+14. Save the file.
+
+# BOILERPLATE REACT INFO BELOW
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
